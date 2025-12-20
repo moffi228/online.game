@@ -3,6 +3,8 @@ init()
 import socket
 from PIL import Image
 
+mixer_music.load("Elektronika_60_-_Melodiya_iz_Tetrisa_(SkySound.cc).mp3")
+mixer_music.play()
 window = display.set_mode((500, 500))
 clock = time.Clock()
 display.set_caption("LEVEL 2")
@@ -10,22 +12,36 @@ window.fill((0, 0, 0))
 
 # Завантаження зображень
 player_img = image.load("завантаження1.png")
-player_img = transform.scale(player_img, (50, 100))
+player_img = transform.scale(player_img, (20, 100))
 
 player2_img = image.load("завантаження.png")
-player2_img = transform.scale(player2_img, (50, 100))
+player2_img = transform.scale(player2_img, (20, 100))
+
+wall_img = image.load("завантаження (5).jpg")
+wall_img = transform.scale(wall_img, (500, 20))
+
+wall2_img = image.load("завантаження (5) copy.jpg")
+wall2_img = transform.scale(wall2_img, (500, 20))
 
 ball_img = image.load("завантаження (3).jpg")
 ball_img = transform.scale(ball_img, (20, 20))
 
 # Створюємо Rect для гравців і м'яча
 player1 = player_img.get_rect()
-player1.x = 0
+player1.x = 1
 player1.y = 200
 
 player2 = player2_img.get_rect()
-player2.x = 450
+player2.x = 479
 player2.y = 200
+
+wall_1= wall_img.get_rect()
+wall_1.x = 0
+wall_1.y = 0
+
+wall_2 = wall2_img.get_rect()
+wall_2.x = 0
+wall_2.y = 480
 
 ball = ball_img.get_rect()
 ball.x = 250
@@ -59,6 +75,19 @@ def collision():
     global ball_speed_x
     if ball.colliderect(player1) or ball.colliderect(player2):
         ball_speed_x*= -1
+    
+    global wall_1, wall_2
+    if player1.colliderect(wall_1) or player1.colliderect(wall_2):
+        if player1.colliderect(wall_1):
+            player1.y = wall_1.y + wall_1.height
+        if player1.colliderect(wall_2):
+            player1.y = wall_2.y - player1.height
+    if player2.colliderect(wall_1) or player2.colliderect(wall_2):
+        if player2.colliderect(wall_1):
+            player2.y = wall_1.y + wall_1.height
+        if player2.colliderect(wall_2):
+            player2.y = wall_2.y - player2.height
+
 def move_ball():
     global ball_speed_x, ball_speed_y
 
@@ -99,9 +128,11 @@ while True:
     window.blit(player_img, player1)
     window.blit(player2_img, player2)
     window.blit(ball_img, ball)
+    window.blit(wall_img, wall_1)
+    window.blit(wall2_img, wall_2)
     text= font_main.render(f"{score_player1} : {score_player2}", True, (0, 0, 0))
     window.blit(text, (200, 20))
     # Оновлення екрану
     display.update()
-    clock.tick(40)
+    clock.tick(60)
 
