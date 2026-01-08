@@ -2,38 +2,45 @@ from pygame import*
 init()
 import socket
 from PIL import Image
-
-mixer_music.load("Elektronika_60_-_Melodiya_iz_Tetrisa_(SkySound.cc).mp3")
+mixer_music.load("Muzyka_iz_tetrisa_-_Tetris_(SkySound.cc).mp3")
 mixer_music.play()
+
 window = display.set_mode((500, 500))
 clock = time.Clock()
 display.set_caption("LEVEL 2")
 window.fill((0, 0, 0))
 
 # Завантаження зображень
-player_img = image.load("завантаження1.png")
+player_img = image.load("wall.png")
 player_img = transform.scale(player_img, (20, 100))
 
-player2_img = image.load("завантаження.png")
+player2_img = image.load("wall2.png")
 player2_img = transform.scale(player2_img, (20, 100))
 
-wall_img = image.load("завантаження (5).jpg")
-wall_img = transform.scale(wall_img, (500, 20))
+wall_img = image.load("images.jpg")
+wall_img = transform.scale(wall_img, (500, 10))
 
-wall2_img = image.load("завантаження (5) copy.jpg")
-wall2_img = transform.scale(wall2_img, (500, 20))
+wall2_img = image.load("images copy.jpg")
+wall2_img = transform.scale(wall2_img, (500, 10))
 
-ball_img = image.load("завантаження (3).jpg")
+ball_img = image.load("ball.png")
 ball_img = transform.scale(ball_img, (20, 20))
 
+sky_img=image.load("sky.png")
+sky_img=transform.scale(sky_img, (500, 500))
+
 # Створюємо Rect для гравців і м'яча
+sky=sky_img.get_rect()
+sky.x=0
+sky.y=0
+
 player1 = player_img.get_rect()
-player1.x = 1
+player1.x = -3
 player1.y = 200
 
 player2 = player2_img.get_rect()
-player2.x = 479
-player2.y = 200
+player2.x = 480
+player2.y = 180
 
 wall_1= wall_img.get_rect()
 wall_1.x = 0
@@ -41,7 +48,7 @@ wall_1.y = 0
 
 wall_2 = wall2_img.get_rect()
 wall_2.x = 0
-wall_2.y = 480
+wall_2.y = 490
 
 ball = ball_img.get_rect()
 ball.x = 250
@@ -87,6 +94,7 @@ def collision():
             player2.y = wall_1.y + wall_1.height
         if player2.colliderect(wall_2):
             player2.y = wall_2.y - player2.height
+    
 
 def move_ball():
     global ball_speed_x, ball_speed_y
@@ -125,14 +133,15 @@ while True:
     score()
     # Малювання
     window.fill((255, 255, 255))
+    window.blit(sky_img, sky)
     window.blit(player_img, player1)
     window.blit(player2_img, player2)
     window.blit(ball_img, ball)
     window.blit(wall_img, wall_1)
     window.blit(wall2_img, wall_2)
+    
     text= font_main.render(f"{score_player1} : {score_player2}", True, (0, 0, 0))
     window.blit(text, (200, 20))
     # Оновлення екрану
     display.update()
     clock.tick(60)
-
